@@ -1,0 +1,85 @@
+name: Trigger SecureCodeBox Gitleaks Scan
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  trigger-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Trigger SecureCodeBox Scan
+      env:
+        SCB_API_URL: https://dfc7-103-160-79-246.ngrok-free.app
+        SCB_API_TOKEN: /fFBEMNWvDEB+LswldN7PyG+jYTnJOH9o8qcgUv/cl8=
+      run: |
+        curl -X POST "$SCB_API_URL/api/v1/namespaces/securecodebox/scans" \
+        -H "Authorization: Bearer $SCB_API_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{
+              "apiVersion": "execution.securecodebox.io/v1",
+              "kind": "Scan",
+              "metadata": {
+                "name": "dvwa-scan",
+                "namespace": "gitleaks",
+              },
+              "spec": {
+                "scanType": "gitleaks",
+                "parameters": [
+                  "detect",
+                  "--source",
+                  "/repo/"
+                ],
+                "volumes": [
+                  {
+                    "name": "repo",
+                    "emptyDir": {}
+                  }
+                ],
+                "volumeMounts": [
+                  {
+                    "name": "repo",
+                    "mountPath": "/repo/"
+                  }
+                ],
+                "initContainers": [
+                  {
+                    "name": "git-clone",
+                    "image": "bitnami/git",
+                    "volumeMounts": [
+                      {
+                        "name": "repo",
+                        "mountPath": "/repo/"
+                      }
+                    ],
+                    "command": [
+                      "git",
+                      "clone",
+                      "--mirror",
+                      "https://github.com/clr34m3r-tester/DVWA",
+                      "/repo/"
+                    ],
+                    "env": [
+                      {
+                        "name": "GITHUB_TOKEN",
+                        "valueFrom": {
+                          "secretKeyRef": {
+                            "name": "github-token",
+                            "key": "token"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }'
