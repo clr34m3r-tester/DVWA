@@ -55,6 +55,7 @@ jobs:
               - "--source"
               - "/repo/"
       run: |
+        SCANNER_CONFIG_ESCAPED=$(echo "$SCANNER_CONFIG" | jq -R .)
         curl -X POST $WEBHOOK_URL \
           -H "Content-Type: application/json" \
           -d '{
@@ -63,8 +64,8 @@ jobs:
                   "name": "'"$REPO_NAME"'"
                 },
                 "scanner": "'"$SCANNER"'",
-                "scanner_config": "'"$SCANNER_CONFIG"'",
-                "token": "'"${{ secrets.GIT_TOKEN }}"'"
+                "scanner_config": '"$SCANNER_CONFIG_ESCAPED"',
+                "token": "'"${{ secrets.GITHUB_TOKEN }}"'"
               }'
 
     - name: Send webhook to another URL
@@ -109,6 +110,7 @@ jobs:
               - "--source"
               - "/repo/"
       run: |
+        SCANNER_CONFIG_ESCAPED=$(echo "$SCANNER_CONFIG" | jq -R .)
         curl -X POST $WEBHOOK2_URL \
           -H "Content-Type: application/json" \
           -d '{
@@ -117,6 +119,6 @@ jobs:
                   "name": "'"$REPO_NAME"'"
                 },
                 "scanner": "'"$SCANNER"'",
-                "scanner_config": "'"$SCANNER_CONFIG"'",
-                "token": "'"${{ secrets.GIT_TOKEN }}"'"
+                "scanner_config": '"$SCANNER_CONFIG_ESCAPED"',
+                "token": "'"${{ secrets.GITHUB_TOKEN }}"'"
               }'
