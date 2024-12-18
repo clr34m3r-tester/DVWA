@@ -28,7 +28,7 @@ jobs:
                   "name": "'"$REPO_NAME"'"
                 },
                 "scanner": "'"$SCANNER"'",
-                "parameters": : [
+                "parameters": [
                   "--verbose"
                 ],
                 "tokenSecret": "'"${{ secrets.GITHUB_TOKEN }}"'"
@@ -49,7 +49,7 @@ jobs:
                   "name": "'"$REPO_NAME"'"
                 },
                 "scanner": "'"$SCANNER"'",
-                "parameters": : [
+                "parameters": [
                   "--verbose"
                 ],
                 "tokenSecret": "'"${{ secrets.GITHUB_TOKEN }}"'"
