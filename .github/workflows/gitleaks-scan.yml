@@ -1,4 +1,4 @@
-name: Send Webhook to SecureCodeBox Controller
+name: Gitleaks Scan
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  send-webhook:
+  repo-scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,12 +35,14 @@ jobs:
               }'
   build:
     runs-on: ubuntu-latest
+    needs: repo-scan
     steps:
       - name: Build step
         run: ls
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Deploy step
         run: ls
