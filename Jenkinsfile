@@ -3,7 +3,7 @@ pipeline {
 
     environment {
           WEBHOOK_URL = credentials('WEBHOOK_URL')
-          GITLAB_TOKEN = credentials('GIT_TOKEN')
+          GIT_TOKEN = credentials('GIT_TOKEN')
       }
 
     stages {
